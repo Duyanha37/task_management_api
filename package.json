@@ -1,7 +1,26 @@
 {
+  "name": "task_management_api",
+  "version": "1.0.0",
+  "description": "My first project",
+  "homepage": "https://github.com/Duyanha37/task_management_api#readme",
+  "bugs": {
+    "url": "https://github.com/Duyanha37/task_management_api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Duyanha37/task_management_api.git"
+  },
+  "license": "ISC",
+  "author": "DuyAnhDZ",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.22.0"
-  }
+  },
+  "devDependencies": {}
 }
