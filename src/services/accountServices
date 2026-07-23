@@ -1,0 +1,23 @@
+const pool = require('../config/db');
+
+const Login = async (username, password) => {
+    try {
+        const result = await pool.query('SELECT id, username, display_name, email, phone, role FROM users WHERE username = $1 AND password = $2;', [username, password]);
+        return result.rows[0] || null;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+const Register = async (username, password) => {
+    try {
+        const result = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username, display_name, email, phone, role;', [username, password]);
+        return result.rows[0];
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+module.exports = { Login, Register };

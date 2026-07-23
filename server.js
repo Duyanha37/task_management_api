@@ -4,11 +4,11 @@ const dotenv = require('dotenv').config();
 const pool = require('./src/config/db');
 const port = process.env.PORT || 3000;
 const taskRoutes = require('./src/routes/taskRoutes');
-const loginRoutes = require('./src/routes/loginRoutes');
+const accountRoutes = require('./src/routes/accountRoutes');
 
 app.use(express.json());
 
-app.use('/', loginRoutes);
+app.use('/', accountRoutes);
 
 app.use('/app', taskRoutes);
 
