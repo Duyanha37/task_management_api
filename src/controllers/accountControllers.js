@@ -1,4 +1,5 @@
 const accountServices = require('../services/accountServices');
+const jwt = require('jsonwebtoken');
 
 const loginController = async (req, res) => {
     
@@ -13,7 +14,8 @@ const loginController = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Không đúng username hoặc password' });
         }
-        res.status(200).json({ message: 'Đăng nhập thành công', user });
+        const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
+        res.status(200).json({ message: 'Đăng nhập thành công', token });
         return;
     } catch (err) {
         console.error(err);
@@ -34,7 +36,7 @@ const registerController = async (req, res) => {
 
     try {
         const newUser = await accountServices.Register(username, password);
-        res.status(201).json({ message: 'Đăng ký thành công', user: newUser });
+        res.status(201).json({ message: 'Đăng ký thành công'});
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Có lỗi xảy ra khi đăng ký' });
