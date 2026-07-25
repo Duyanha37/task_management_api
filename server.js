@@ -5,10 +5,13 @@ const pool = require('./src/config/db');
 const port = process.env.PORT || 3000;
 const taskRoutes = require('./src/routes/taskRoutes');
 const accountRoutes = require('./src/routes/accountRoutes');
+const categoriesRoutes = require('./src/routes/categoriesRoutes');
 
 app.use(express.json());
 
 app.use('/', accountRoutes);
+
+app.use('/categories', categoriesRoutes);
 
 app.use('/app', taskRoutes);
 
