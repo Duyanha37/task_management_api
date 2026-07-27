@@ -43,4 +43,19 @@ const registerController = async (req, res) => {
     }
 };
 
-module.exports = { loginController, registerController };
+const deleteUserController = async (req, res) => {
+    const user_id = req.user.id;
+
+    try {
+        const deletedUser = await accountServices.deleteUserService(user_id);
+        if (!deletedUser) {
+            return res.status(404).json({ error: 'Người dùng không tồn tại' });
+        }
+        res.status(200).json({ message: 'Xóa tài khoản thành công', user: deletedUser });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Có lỗi xảy ra khi xóa tài khoản' });
+    }
+};
+
+module.exports = { loginController, registerController, deleteUserController };

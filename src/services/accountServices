@@ -20,4 +20,14 @@ const Register = async (username, password) => {
     }
 };
 
-module.exports = { Login, Register };
+const deleteUserService = async (user_id) => {
+    try {
+        const user = await pool.query('DELETE FROM users WHERE id = $1 RETURNING id, username, display_name, email, phone, role;', [user_id]);
+        return user.rows[0];
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+module.exports = { Login, Register, deleteUserService };
