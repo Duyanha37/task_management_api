@@ -1,5 +1,6 @@
 const accountServices = require('../services/accountServices');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 const loginController = async (req, res) => {
     
@@ -14,8 +15,11 @@ const loginController = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Không đúng username hoặc password' });
         }
-        const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
-        res.status(200).json({ message: 'Đăng nhập thành công', token });
+        const accesstoken = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const refreshtoken = jwt.sign({id: user.id}, process.env.REFRESH_SECRET_KEY, { expiresIn: '30d' });
+        await accountServices.refreshTokenService(refreshtoken, user.id);
+        res.cookie('refreshToken', refreshtoken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 });
+        res.status(200).json({ message: 'Đăng nhập thành công', accesstoken});
         return;
     } catch (err) {
         console.error(err);
@@ -58,4 +62,25 @@ const deleteUserController = async (req, res) => {
     }
 };
 
-module.exports = { loginController, registerController, deleteUserController };
+const refreshTokenController = async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    
+    if (!refreshToken) {
+        return res.status(401).json({ error: 'Không có refresh token' });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+        const user = await accountServices.checkrefreshTokenService(refreshToken, decoded.id);
+        if (!user) {
+            return res.status(403).json({ error: 'Refresh token không hợp lệ' });
+        }
+        const newAccessToken = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
+        res.status(200).json({ accesstoken: newAccessToken });
+    } catch (err) {
+        console.error(err);
+        res.status(403).json({ error: 'Refresh token không hợp lệ' });
+    }
+};
+
+module.exports = { loginController, registerController, deleteUserController, refreshTokenController };
