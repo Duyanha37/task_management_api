@@ -83,4 +83,14 @@ const refreshTokenController = async (req, res) => {
     }
 };
 
-module.exports = { loginController, registerController, deleteUserController, refreshTokenController };
+const logoutController = async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Người dùng chưa đăng nhập' });
+    }
+
+    res.clearCookie('refreshToken', { httpOnly: true, secure: false, sameSite: 'lax' });
+    await accountServices.clearrefreshTokenService(req.user.id);
+    res.status(200).json({ message: 'Đăng xuất thành công' });
+};
+
+module.exports = { loginController, registerController, deleteUserController, refreshTokenController, logoutController };
