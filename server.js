@@ -7,15 +7,17 @@ const port = process.env.PORT || 3000;
 const tasksRoutes = require('./src/routes/tasksRoutes');
 const accountRoutes = require('./src/routes/accountRoutes');
 const categoriesRoutes = require('./src/routes/categoriesRoutes');
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieparser());
 
-app.use('/', accountRoutes);
+app.use('/api/accounts', accountRoutes);
 
-app.use('/categories', categoriesRoutes);
+app.use('/api/categories', categoriesRoutes);
 
-app.use('/app', tasksRoutes);
+app.use('/api/tasks', tasksRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
