@@ -10,6 +10,16 @@ const Login = async (username, password) => {
     }
 };
 
+const checkUserExists = async (username) => {
+    try {
+        const result = await pool.query('SELECT id FROM users WHERE username = $1;', [username]);
+        return result.rows.length > 0;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 const Register = async (username, password) => {
     try {
         const result = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username, display_name, email, phone, role;', [username, password]);
@@ -58,4 +68,4 @@ const clearrefreshTokenService = async (user_id) => {
     }
 };
 
-module.exports = { Login, Register, deleteUserService, refreshTokenService, checkrefreshTokenService, clearrefreshTokenService };
+module.exports = { Login, Register, deleteUserService, refreshTokenService, checkrefreshTokenService, clearrefreshTokenService, checkUserExists };

@@ -36,6 +36,10 @@ const registerController = async (req, res) => {
         return res.status(400).json({ error: 'Password và confirmPassword không khớp' });
     }
 
+    if (await accountServices.checkUserExists(req.body.username)) {
+        return res.status(409).json({ error: 'Username đã tồn tại' });
+    }
+
     const { username, password } = req.body;
 
     try {
