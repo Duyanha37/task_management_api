@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "run dev": "nodemon server.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
